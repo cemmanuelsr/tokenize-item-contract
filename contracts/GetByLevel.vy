@@ -4,7 +4,7 @@
 
 # Struct de dados do usuário
 struct User:
-  lvl: uint256 # level
+  # lvl: uint256 # level
   acquired: bool # variável de controle
 
 # Map de usuários
@@ -34,19 +34,20 @@ def __init__(min_lvl: uint256, price: uint256):
   self.deadline = deadline
 
 # Função para subir o nível de um usuário
-@external
-def raise_user_lvl(by: uint256):
-  self.users[msg.sender].lvl += by
+# Não é mais necessária se o level do usuário for armazenado externamente
+# external
+# def raise_user_lvl(by: uint256):
+#   self.users[msg.sender].lvl += by
 
 # Função para que o usuário possa resgatar um item
 # Condicionado aos requirements do item ou compra
 @external
 @payable
-def redeem():
+def redeem(user_lvl: uint256):
   assert block.timestamp < self.deadline
   # Verifica que os requerimentos foram cumpridos
   # Ou que o preço foi pago
-  assert (self.users[msg.sender].lvl >= min_lvl) or (msg.value >= price)
+  assert (user_lvl >= min_lvl) or (msg.value >= price)
   assert not self.users[msg.sender].acquired
 
   self.users[msg.sender].acquired = True
